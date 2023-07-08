@@ -25,8 +25,8 @@ func main() {
 	nums4 := make([]int, 0)
 	fmt.Println(nums4) // []
 
-	nums5 := make([]int, 5)
-	fmt.Println(nums5) // [0 0 0 0 0]
+	nums5 := make([]int, 5) // []int{0,0,0,0,0}
+	fmt.Println(nums5)      // [0 0 0 0 0]
 
 	nums6 := make([]int, 0, 5)
 	fmt.Println(nums6) // []
@@ -118,7 +118,7 @@ func main() {
 	nums16 = nums16[:2]
 	fmt.Println(nums16) // [1 2]
 
-	nums16 = nums16[:]
+	nums16 = nums16[:]  // nums = [5]int{1,2,3,4,5} , slice = nums[:]
 	fmt.Println(nums16) // [1 2 3 4 5]
 
 	fmt.Println("Slice of string")
@@ -142,7 +142,7 @@ func main() {
 
 	fmt.Println("Copy slice")
 	srcSlice := []int{1, 2, 3, 4, 5}
-	dstSlice := make([]int, 3)
+	dstSlice := make([]int, 3) // [0 0 0]
 	copy(dstSlice, srcSlice)
 	fmt.Println(dstSlice) // [1 2 3]
 
