@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 
+	"simple-todo/handler"
+	"simple-todo/inmemory"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,14 +43,14 @@ func main() {
 	// curl -X DELETE http://localhost:8080/todos/6807E49C-D68F-4D38-A990-6FACCB0E51A3
 	// Response Code 200 OK
 
+	hd := handler.Handler{
+		Storage: &inmemory.TodoStorage{},
+	}
+
 	router := gin.Default()
-	router.POST("/todos", func(c *gin.Context) {
-	})
-	router.GET("/todos/:id", func(c *gin.Context) {
-		// c.Params("id")
-	})
-	router.GET("/todos", func(c *gin.Context) {
-	})
+	router.POST("/todos", hd.AddTodo)
+	router.GET("/todos/:id", hd.GetByID)
+	router.GET("/todos", hd.GetAllTodo)
 	router.PUT("/todos/:id/done", func(c *gin.Context) {
 	})
 	router.DELETE("/todos/:id", func(c *gin.Context) {

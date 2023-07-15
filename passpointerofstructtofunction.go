@@ -10,11 +10,11 @@ type Address struct {
 }
 
 type Customer struct {
-	FirsName string
-	LastName string
-	Age      int
-	Address  Address
-	Company  *Company
+	FirstName string
+	LastName  string
+	Age       int
+	Address   Address
+	Company   *Company
 }
 
 type Company struct {
@@ -34,9 +34,9 @@ func main() {
 	}
 
 	cust := Customer{
-		FirsName: "John",
-		LastName: "Smith",
-		Age:      30,
+		FirstName: "John",
+		LastName:  "Smith",
+		Age:       30,
 		Address: Address{
 			Street:     "1234 Main Street",
 			City:       "Columbus",
@@ -59,7 +59,7 @@ func main() {
 
 func DisplayCustomer(cust Customer) {
 	fmt.Println("CUSTOMER RECORD:")
-	fmt.Println("FIRSTNAME:", cust.FirsName)
+	fmt.Println("FIRSTNAME:", cust.FirstName)
 	fmt.Println("LASTNAME:", cust.LastName)
 	fmt.Println("AGE:", cust.Age)
 	fmt.Println("ADDRESS")
@@ -78,7 +78,7 @@ func DisplayCustomer(cust Customer) {
 
 func DisplayCustomerWithPointer(cust *Customer) {
 	fmt.Println("CUSTOMER RECORD:")
-	fmt.Println("FIRSTNAME:", cust.FirsName)
+	fmt.Println("FIRSTNAME:", cust.FirstName)
 	fmt.Println("LASTNAME:", cust.LastName)
 	fmt.Println("AGE:", cust.Age)
 	fmt.Println("ADDRESS")
@@ -96,9 +96,9 @@ func DisplayCustomerWithPointer(cust *Customer) {
 }
 
 func changeName(cust Customer) {
-	cust.FirsName = "Bob"
+	cust.FirstName = "Bob"
 }
 
 func changeNameByPointer(cust *Customer) {
-	cust.FirsName = "Bob"
+	cust.FirstName = "Bob"
 }

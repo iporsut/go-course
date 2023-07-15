@@ -10,11 +10,11 @@ type Address struct {
 }
 
 type Customer struct {
-	FirsName string
-	LastName string
-	Age      int
-	Address  Address
-	Company  *Company
+	FirstName string
+	LastName  string
+	Age       int
+	Address   Address
+	Company   *Company
 }
 
 type Company struct {
@@ -23,11 +23,11 @@ type Company struct {
 }
 
 func (c *Customer) Name() string {
-	return c.FirsName + " " + c.LastName
+	return c.FirstName + " " + c.LastName
 }
 
 func (c *Customer) ChangeName(newName string) {
-	c.FirsName = newName
+	c.FirstName = newName
 }
 
 func main() {
@@ -42,9 +42,9 @@ func main() {
 	}
 
 	cust := Customer{
-		FirsName: "John",
-		LastName: "Smith",
-		Age:      30,
+		FirstName: "John",
+		LastName:  "Smith",
+		Age:       30,
 		Address: Address{
 			Street:     "1234 Main Street",
 			City:       "Columbus",

@@ -1,4 +1,4 @@
-package strutil
+package stringutil // <- this is package name
 
 import "strings"
 

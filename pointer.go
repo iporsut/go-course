@@ -14,7 +14,8 @@ func main() {
 	fmt.Println("v1", v1)
 	fmt.Println("v2", v2)
 
-	p1 := &v1
+	var p1 *int
+	p1 = &v1
 	fmt.Println("p1 is a pointer to v1")
 	fmt.Println("p1", p1)
 
@@ -24,7 +25,7 @@ func main() {
 	fmt.Println("*p1", *p1)
 
 	fmt.Println("Change value of v1 to 50 by function")
-	changeTo50(v1)
+	changeTo50(v1) // v = v1
 	fmt.Println("v1", v1)
 
 	fmt.Println("Change value of v1 to 50 by pointer to function")

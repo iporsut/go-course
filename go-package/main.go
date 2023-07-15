@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"go-package/strutil"
+	su "go-package/strutil" // <- package path
 )
 
 func main() {
 	var telephone = "123-456-7890"
-	fmt.Println(strutil.RemoveDash(telephone))
+	tel := su.RemoveDash(telephone) // packagename.FunctionName
+	fmt.Println(tel)
 }

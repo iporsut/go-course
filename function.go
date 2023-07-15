@@ -14,7 +14,7 @@ func divide(x, y int) (int, int) {
 	return x / y, x % y
 }
 
-func divide2(x, y int) (quotient, remainder int) {
+func divide2(x, y int) (quotient int, remainder int) {
 	quotient = x / y
 	remainder = x % y
 	return
@@ -29,6 +29,7 @@ func divide3(x, y int) (int, error) {
 
 func exampleOfDefer() {
 	defer fmt.Println("world")
+
 	fmt.Println("hello")
 }
 
@@ -38,7 +39,9 @@ func exampleOfDefer2() (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	defer f.Close()
+
 	b, err := io.ReadAll(f)
 	if err != nil {
 		return "", err

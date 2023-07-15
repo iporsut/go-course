@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type Address struct {
 	Street     string
 	City       string
@@ -8,11 +10,11 @@ type Address struct {
 }
 
 type Customer struct {
-	FirsName string
-	LastName string
-	Age      int
-	Address  Address
-	Company  *Company
+	FirstName string
+	LastName  string
+	Age       int
+	Address   Address
+	Company   *Company
 }
 
 type Company struct {
@@ -21,12 +23,24 @@ type Company struct {
 }
 
 func (c *Customer) Name() string {
-	return c.FirsName + " " + c.LastName
+	return c.FirstName + " " + c.LastName
 }
 
 func (c *Customer) ChangeName(newName string) {
-	c.FirsName = newName
+	c.FirstName = newName
 }
+
+type MyString string
+
+func (s MyString) Length() int {
+	return len(s)
+}
+
+// type MyT a.T
+
+// func (m MyT) Method() {
+
+// }
 
 func main() {
 	comp := Company{
@@ -40,9 +54,9 @@ func main() {
 	}
 
 	cust := Customer{
-		FirsName: "John",
-		LastName: "Smith",
-		Age:      30,
+		FirstName: "John",
+		LastName:  "Smith",
+		Age:       30,
 		Address: Address{
 			Street:     "1234 Main Street",
 			City:       "Columbus",
@@ -52,6 +66,9 @@ func main() {
 		Company: &comp,
 	}
 
-	cust.ChangeName("Michael")
-	println(cust.Name())
+	cust.ChangeName("Michael") // (&cust).ChangeName("Michael")
+	fmt.Println(cust.Name())
+
+	s := MyString("Hello")
+	fmt.Println(s.Length())
 }

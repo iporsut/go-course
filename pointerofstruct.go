@@ -10,11 +10,11 @@ type Address struct {
 }
 
 type Customer struct {
-	FirsName string
-	LastName string
-	Age      int
-	Address  Address
-	Company  *Company
+	FirstName string
+	LastName  string
+	Age       int
+	Address   Address
+	Company   *Company
 }
 
 type Company struct {
@@ -23,31 +23,33 @@ type Company struct {
 }
 
 func main() {
-	comp := Company{
-		Name: "ABC Inc.",
+	cust := Customer{
+		FirstName: "John",
+		LastName:  "Smith",
+		Age:       30,
 		Address: Address{
 			Street:     "1234 Main Street",
 			City:       "Columbus",
 			State:      "Ohio",
 			PostalCode: "43210",
+		},
+		Company: &Company{
+			Name: "ABC Inc.",
+			Address: Address{
+				Street:     "1234 Main Street",
+				City:       "Columbus",
+				State:      "Ohio",
+				PostalCode: "43210",
+			},
 		},
 	}
 
-	cust := Customer{
-		FirsName: "John",
-		LastName: "Smith",
-		Age:      30,
-		Address: Address{
-			Street:     "1234 Main Street",
-			City:       "Columbus",
-			State:      "Ohio",
-			PostalCode: "43210",
-		},
-		Company: &comp,
-	}
+	// cust2 := &cust
+	// cust.FirstName = "Jack"
+	// cust2.FirstName
 
 	fmt.Println(cust)
-	fmt.Println(cust.FirsName)
+	fmt.Println(cust.FirstName)
 	fmt.Println(cust.LastName)
 	fmt.Println(cust.Age)
 	fmt.Println(cust.Address)
