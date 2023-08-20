@@ -1,6 +1,9 @@
 package mrello
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type ErrorCode int
 
@@ -34,6 +37,10 @@ func (e *Error) Error() string {
 	return fmt.Sprintf("error code %s - message %s: %s", e.Code.String(), e.Message, unwrapStr)
 }
 
+func (e *Error) Unwrap() error {
+	return e.Err
+}
+
 func WrapErr(err error, code ErrorCode, message string) *Error {
 	return &Error{
 		Code:    code,
@@ -46,9 +53,11 @@ func IsErrCode(err error, code ErrorCode) bool {
 	if err == nil {
 		return false
 	}
-	e, ok := err.(*Error)
-	if !ok {
-		return false
+
+	var e *Error
+	if errors.As(err, &e) {
+		return e.Code == code
 	}
-	return e.Code == code
+
+	return false
 }

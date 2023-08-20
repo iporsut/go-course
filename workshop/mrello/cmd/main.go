@@ -14,8 +14,14 @@ import (
 )
 
 func main() {
-	pgConnInfo := fmt.Sprintf("host='%s' port='%d' user='%s' password='%s' dbname='%s' sslmode=disable", os.Getenv("DB_HOST"), 5432, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_NAME"))
-	fmt.Println(pgConnInfo)
+	pgConnInfo := fmt.Sprintf("host='%s' port='%d' user='%s' password='%s' dbname='%s' sslmode=disable",
+		os.Getenv("DB_HOST"),
+		5432,
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASS"),
+		os.Getenv("DB_NAME"),
+	)
+
 	db, err := sql.Open("postgres", pgConnInfo)
 	if err != nil {
 		log.Fatal(err)
@@ -29,7 +35,12 @@ func main() {
 	defer db.Close()
 
 	userRepo := pgrepository.NewUserRepository(db)
-	handler := mrello.NewHandler(mrello.WithUserRepository(userRepo))
+	cardRepo := pgrepository.NewCardRepository(db)
+	handler := mrello.NewHandler(
+		mrello.WithUserRepository(userRepo),
+		mrello.WithCardRepository(cardRepo),
+		mrello.WithHMACSalt([]byte(os.Getenv("HMAC_SALT"))),
+	)
 
 	e := gin.Default()
 	mrello.Router(e, handler)

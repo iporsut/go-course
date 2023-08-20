@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -15,8 +16,19 @@ type User struct {
 	UpdatedAt    time.Time
 }
 
-func (u *User) IsPasswordMatch(passwordHash string) bool {
-	return u.PasswordHash == passwordHash
+func (u *User) IsPasswordMatch(password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password)) == nil
+}
+
+func (u *User) NewCard(title string, description string) *Card {
+	return &Card{
+		ID:              uuid.New(),
+		Title:           title,
+		Description:     description,
+		Column:          "todo",
+		CreatedByUserID: u.ID,
+		UpdatedByUserID: u.ID,
+	}
 }
 
 type UserRepository interface {

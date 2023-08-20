@@ -1,15 +1,21 @@
 # Mrello (Trello Clone)
 
+## Install go-migrate
+
+```
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+```
+
 ## Features
 
 - Register new user
 - Login user
 - Logout user
-- All user share same single board
+- All user share same single board, User can load board with 3 columns
 - Board fixed to have 3 columns (To do, Doing, Done)
 - User can create new card in To do column
 - User can move card to each other columns
-- Card has only title and description
+- Card has only ID, title and description
 - Card has information about when it was created, when it was updated and by who
 - Card has editing history
 
@@ -23,6 +29,10 @@
 > migrate create -ext sql -dir db/migrations -seq create_users_table
 /Users/weerasak/src/learning/go-course/workshop/mrello/db/migrations/000001_create_users_table.up.sql
 /Users/weerasak/src/learning/go-course/workshop/mrello/db/migrations/000001_create_users_table.down.sql
+```
+
+```
+make migrate-create NAME=create_users_table
 ```
 
 2. Add 000001_create_users_table.up.sql script

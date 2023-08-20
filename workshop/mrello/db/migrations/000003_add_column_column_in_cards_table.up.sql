@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS cards
+ ADD COLUMN "column" TEXT;
