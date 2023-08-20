@@ -1,12 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 
 	"simple-todo/handler"
 	"simple-todo/inmemory"
+	"simple-todo/postgresql"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -43,8 +46,15 @@ func main() {
 	// curl -X DELETE http://localhost:8080/todos/6807E49C-D68F-4D38-A990-6FACCB0E51A3
 	// Response Code 200 OK
 
+	db, err := sql.Open("postgres", "postgres://weerasak@localhost:5432/simpletodo?sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 	hd := handler.Handler{
 		Storage: &inmemory.TodoStorage{},
+		DB:      postgresql.NewDB(db),
 	}
 
 	router := gin.Default()
