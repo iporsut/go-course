@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"sync"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 func CountDown(n int) {
@@ -45,7 +47,7 @@ func CountDownV2(done chan bool, n int) {
 }
 
 func callWithGoroutineV2() {
-	done := make(chan bool)
+	done := make(chan bool) // unbufferred channel
 	go TickTockV2(done, 10)
 	go CountDownV2(done, 10)
 	<-done
@@ -60,7 +62,7 @@ func sequentialTickTock() {
 }
 
 func bufferredChannel() {
-	ch := make(chan int, 2)
+	ch := make(chan int, 2) // bufferred channel
 	ch <- 1
 	fmt.Println("Add 1")
 	ch <- 2
@@ -138,6 +140,11 @@ func multiplexWithSelect() {
 	go func() {
 		defer fmt.Println("Reciever: DONE")
 		for {
+			// var v int
+			// v = <-ch1
+			// fmt.Println("Channel 1: ", v)
+			// v = <-ch2
+			// fmt.Println("Channel 2: ", v)
 			select {
 			case v := <-ch1:
 				fmt.Println("Channel 1: ", v)
@@ -148,8 +155,12 @@ func multiplexWithSelect() {
 	}()
 
 	for i := 0; i < 10; i++ {
-		ch1 <- i
-		ch2 <- i
+		go func(i int) {
+			ch1 <- i
+		}(i)
+		go func(i int) {
+			ch2 <- i
+		}(i)
 	}
 	time.Sleep(1 * time.Second)
 }
@@ -157,7 +168,7 @@ func multiplexWithSelect() {
 func multiplexWithSelectV2() {
 	ch1 := make(chan int)
 	ch2 := make(chan int)
-	done := make(chan bool)
+	done := make(chan struct{})
 
 	go func() {
 		defer fmt.Println("Reciever: DONE")
@@ -177,7 +188,7 @@ func multiplexWithSelectV2() {
 		ch1 <- i
 		ch2 <- i
 	}
-	done <- true
+	done <- struct{}{}
 	time.Sleep(1 * time.Second)
 }
 
@@ -200,10 +211,11 @@ func multiplexWithSelectV3() {
 
 func syncWithMutex() {
 	var sharedCounter int
-	var mutex sync.Mutex
+	var mu sync.Mutex
 	increment := func() {
-		mutex.Lock()
-		defer mutex.Unlock()
+		mu.Lock()
+		defer mu.Unlock()
+
 		sharedCounter++
 		fmt.Printf("Incrementing: %d\n", sharedCounter)
 	}
@@ -255,7 +267,7 @@ func sequentialRequest() {
 }
 
 func concurrentRequest() {
-	fmt.Println("Sequential Request")
+	fmt.Println("Concurrent Request")
 	start := time.Now()
 	var wg sync.WaitGroup
 	for i := 0; i < 10; i++ {
@@ -274,6 +286,34 @@ func concurrentRequest() {
 		}()
 	}
 	wg.Wait()
+	fmt.Println("use: ", time.Since(start))
+}
+
+func concurrentRequestWithErrorGroup() {
+	fmt.Println("Concurrent Request")
+	start := time.Now()
+
+	grp, grpCtx := errgroup.WithContext(context.Background())
+
+	for i := 0; i < 10; i++ {
+		grp.Go(func() error {
+			req, err := http.NewRequest(http.MethodGet, "https://www.google.com", nil)
+			req = req.WithContext(grpCtx)
+			if err != nil {
+				return err
+			}
+			resp, err := http.DefaultClient.Do(req)
+			if err != nil {
+				return err
+			}
+			fmt.Println("DONE with", resp.StatusCode)
+
+			return nil
+		})
+	}
+
+	grp.Wait()
+
 	fmt.Println("use: ", time.Since(start))
 }
 
@@ -297,6 +337,26 @@ func contextWithCancel() {
 	time.Sleep(5 * time.Second)
 }
 
+func cancelWithContext() {
+	process := func(ctx context.Context) {
+		for i := 1; i <= 10; i++ {
+			select {
+			case <-ctx.Done():
+				fmt.Println("Context Done")
+				return
+			default:
+				fmt.Println(i)
+				time.Sleep(1 * time.Second)
+			}
+		}
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	go process(ctx)
+	time.Sleep(5 * time.Second)
+	cancel()
+	time.Sleep(10 * time.Second)
+}
+
 func contextWithTimeout() {
 	process := func(ctx context.Context) {
 		for i := 1; i <= 10; i++ {
@@ -311,9 +371,10 @@ func contextWithTimeout() {
 		}
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer time.Sleep(1 * time.Second)
 	defer cancel()
+
 	go process(ctx)
+
 	time.Sleep(10 * time.Second)
 }
 
@@ -337,7 +398,7 @@ func contextWithValue() {
 			}
 		}
 	}
-	ctx := context.WithValue(context.Background(), countLimitKey, 2)
+	ctx := context.WithValue(context.Background(), countLimitKey, 6)
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	go process(ctx)
@@ -362,4 +423,5 @@ func main() {
 	// cancelWithContext()
 	// contextWithTimeout()
 	// contextWithValue()
+	concurrentRequestWithErrorGroup()
 }

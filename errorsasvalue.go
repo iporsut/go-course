@@ -41,7 +41,7 @@ func calcWrapErr(x, y int) (float64, error) {
 }
 
 func main() {
-	// result, err := divide(5, 0)
+	// result, err := calc(5, 0)
 	// if err != nil {
 	// 	fmt.Println(err) // fmt.Println will call Error() method of error interface
 	// } else {

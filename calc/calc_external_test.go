@@ -10,6 +10,7 @@ func TestExternalAdd(t *testing.T) {
 		x int
 		y int
 	}
+
 	tests := []struct {
 		name string
 		args args

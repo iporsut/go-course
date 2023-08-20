@@ -37,6 +37,7 @@ func main() {
 	result, err := calcWrapErr(5, 0)
 	if err != nil {
 		fmt.Println(err) // fmt.Println will call Error() method of error interface
+
 		var opErr *OperatorError
 		if errors.As(err, &opErr) {
 			fmt.Println("Type:", opErr.Type)

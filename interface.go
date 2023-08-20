@@ -111,7 +111,7 @@ func main() {
 	// make service
 	svc := Service{
 		Notifier: &SMSNotifier{},
-		Renderer: &WebRenderer{},
+		Renderer: &CommandlineRenderer{},
 	}
 
 	comp := Company{
